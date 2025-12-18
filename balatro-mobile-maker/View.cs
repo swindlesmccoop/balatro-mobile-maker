@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
@@ -168,6 +169,21 @@ internal class View
                     Log("Patching APK folder...");
                     //This isn't pretty, but I'm planning to change how icons are done at some point. So this is fine for now.
                     fileCopy("Balatro-APK-Patch/AndroidManifest.xml", "balatro-apk/AndroidManifest.xml");
+                    Tools.Log("Injecting external storage permissions...");
+                    string manifestPath = "balatro-apk/AndroidManifest.xml";
+                    if (File.Exists(manifestPath))
+                    {
+                        string manifestContent = File.ReadAllText(manifestPath);
+    
+                        //inject permissions and legacy storage flag
+                        string permissionBlock = "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\"/>\n" +
+                                                 "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>\n" +
+                                                 "<uses-permission android:name=\"android.permission.MANAGE_EXTERNAL_STORAGE\"/>\n" +
+                                                 "<application android:requestLegacyExternalStorage=\"true\"";
+    
+                        manifestContent = manifestContent.Replace("<application", permissionBlock);
+                        File.WriteAllText(manifestPath, manifestContent);
+                    }
                     fileCopy("Balatro-APK-Patch/res/drawable-hdpi/love.png", "balatro-apk/res/drawable-hdpi/love.png");
                     fileCopy("Balatro-APK-Patch/res/drawable-mdpi/love.png", "balatro-apk/res/drawable-mdpi/love.png");
                     fileCopy("Balatro-APK-Patch/res/drawable-xhdpi/love.png", "balatro-apk/res/drawable-xhdpi/love.png");
