@@ -1,0 +1,47 @@
+name: Build balatro-mobile-maker
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+            output_name: balatro-mobile-maker.exe
+            asset_name: balatro-mobile-maker-win-x64
+          - os: ubuntu-latest
+            rid: linux-x64
+            output_name: balatro-mobile-maker
+            asset_name: balatro-mobile-maker-linux-x64
+          - os: macos-latest
+            rid: osx-x64
+            output_name: balatro-mobile-maker
+            asset_name: balatro-mobile-maker-osx-x64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Build ${{ matrix.rid }}
+      run: |
+        dotnet publish balatro-mobile-maker.sln -c Release -r ${{ matrix.rid }} --self-contained true -p:PublishSingleFile=true -p:DebugType=None -o out
+        
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.asset_name }}
+        path: out/${{ matrix.output_name }}
