@@ -1,5 +1,14 @@
-# Balatro Mobile Maker
+# External Storage Patch
+## Instructions
+1. Install APK after you have run the tool
+2. Go to `Settings -> Apps -> Special app access -> All files access -> Balatro` and grant Balatro the `Allow access to manage all files` permission
+    - The app will not automatically prompt for storage permissions, and this is the only way to enable external storage without having to rewrite parts of the LOVE2D Android wrapper, which doing this already was enough of a headache anyways
+3. Save files will automatically save to `/storage/emulated/0/Documents/Balatro`
+    - This is hardcoded in `Patching.cs`, you can try to change this if you want but I had little success with it so for some reason
 
+---
+
+## Balatro Mobile Maker
 The goal of this project is to allow *Balatro* fans to play *Balatro* on their mobile devices. This project provides a **NON-PIRACY** avenue for players to do so, by converting their *Steam* copy of *Balatro* to a mobile app. Balatro Mobile Maker also supports automatically transferring your saves back and forth between your *Steam* copy of the game and your mobile device (save transfer features only officially available on Windows and Android, for now).
 
 Mods are not _officially_ supported, [but they will probably work if you transfer your saves from a modded system](https://github.com/blake502/balatro-mobile-maker/issues/11).
